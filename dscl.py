@@ -21,6 +21,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# example usage:
+#
+# from dscl import dscl
+# 
+# config = dscl.parse(path_to_config_file)
+
+# example config-file syntax:
+#
+# [plugins]
+# 
+# syntax_highlighter      true                  -- enable or disable syntax highlighting plugin
+# git_integration         true                  -- enable or disable git integration
+# auto_complete           true                  -- enable or disable auto completion
+# 
+# [themes]
+# 
+# current_theme           "monokai"             -- set the active theme
+# theme_path              "~/.config/themes"    -- path where custom themes are stored
+# 
+# [logs]
+# 
+# log_level               "info"                -- set the log level (debug, info, warn, error)
+# log_file                "/var/log/editor.log" -- location to store logs
+
 def parse(path) -> dict:
     config = {}
     with open(path, "r") as file:
