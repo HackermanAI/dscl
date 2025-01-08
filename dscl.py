@@ -60,9 +60,11 @@ def parse(path) -> dict:
             values = line.split(" ", 1)
 
             if len(values) == 1:
-                header = values[0].strip().replace("[", "").replace("]", "")
-                config[str(header)] = {}
-            else:
+                # only headers are length 1
+                if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
+                    header = values[0].strip().replace("[", "").replace("]", "")
+                    config[str(header)] = {}
+            elif len(values) == 2:
                 config_key = values[0]
                 config_value = values[1].strip().replace("\"", "")
 
