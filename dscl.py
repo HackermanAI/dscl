@@ -59,7 +59,7 @@ def parse(path) -> dict:
             
             values = line.split(" ", 1)
 
-            if len(values) == 1:
+            if len(values) == 1 or (len(values) == 2 and values[1].startswith("--")):
                 # only headers are length 1
                 if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
                     header = values[0].strip().replace("[", "").replace("]", "")
