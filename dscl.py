@@ -66,7 +66,9 @@ def parse(path) -> dict:
                     config[str(header)] = {}
             elif len(values) == 2:
                 config_key = values[0]
-                config_value = values[1].strip().replace("\"", "")
+                config_value = values[1].strip()
+                # strings
+                if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
 
                 if "--" in config_value and not config_value.startswith("--"): config_value = config_value.split("--", 1)[0].strip()
 
