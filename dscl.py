@@ -67,13 +67,16 @@ def parse(path) -> dict:
             elif len(values) == 2:
                 config_key = values[0]
                 config_value = values[1].strip()
-                # strings
-                if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
-
+                # strip comments
                 if "--" in config_value and not config_value.startswith("--"): config_value = config_value.split("--", 1)[0].strip()
 
+                # strings
+                if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
+                
+                # conditionals
                 if config_value == "true": config_value = True
                 elif config_value == "false": config_value = False
+                # digits
                 elif config_value.isdigit(): config_value = int(config_value)
 
                 if config_key != None and config_value != None: config[header][str(config_key)] = config_value
