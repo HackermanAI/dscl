@@ -76,8 +76,13 @@ def parse(path) -> dict:
 
                 # tuple
                 if config_value.startswith("(") and config_value.endswith(")"):
-                    config_value = int(config_value)
-                    pass
+                    nested_values = config_value.replace("(", "").replace(")", "")
+                    nested_values = nested_values.split(",", 1)
+
+                    if len(nested_values) == 2:
+                        config_value = (nested_values[0].replace("\"", ""), nested_values[1].replace("\"", ""))
+                    else:
+                        config_value = (nested_values[0].replace("\"", ""), None)
 
                 # strings
                 elif config_value.startswith("\"") and config_value.endswith("\""):
