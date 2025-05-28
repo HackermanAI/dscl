@@ -74,11 +74,12 @@ def parse(path) -> dict:
                 if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
                 
                 # conditionals
-                if config_value == "true": config_value = True
-                elif config_value == "false": config_value = False
+                if config_value in { "true", "false" }: config_value = True if config_value == "true" else False
+                
                 # digits
-                elif config_value.isdigit(): config_value = int(config_value)
+                if config_value.isdigit(): config_value = int(config_value)
 
+                # sanity check
                 if config_key != None and config_value != None: config[header][str(config_key)] = config_value
 
     return config
