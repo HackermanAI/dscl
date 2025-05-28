@@ -75,20 +75,20 @@ def parse(path) -> dict:
                     config_value = config_value.split("--", 1)[0].strip()
 
                 # tuple
-                if config_value.startswith("("):
-                    # config_value = int(config_value)
+                if config_value.startswith("(") and config_value.endswith(")"):
+                    config_value = int(config_value)
                     pass
 
                 # strings
-                if config_value.startswith("\"") and config_value.endsswith("\""):
+                elif config_value.startswith("\"") and config_value.endswith("\""):
                     config_value = config_value.replace("\"", "")
                 
                 # conditionals
-                if config_value in { "true", "false" }:
+                elif config_value in { "true", "false" }:
                     config_value = True if config_value == "true" else False
                 
                 # digits
-                if config_value.isdigit():
+                elif config_value.isdigit():
                     config_value = int(config_value)
 
                 # sanity check
