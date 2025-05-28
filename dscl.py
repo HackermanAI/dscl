@@ -69,22 +69,30 @@ def parse(path) -> dict:
             elif len(values) == 2:
                 config_key = values[0]
                 config_value = values[1].strip()
+                
                 # strip comments
-                if "--" in config_value and not config_value.startswith("--"): config_value = config_value.split("--", 1)[0].strip()
+                if "--" in config_value and not config_value.startswith("--"):
+                    config_value = config_value.split("--", 1)[0].strip()
 
                 # tuple
-                if config_value.isdigit(): config_value = int(config_value)
+                if config_value.startswith("("):
+                    # config_value = int(config_value)
+                    pass
 
                 # strings
-                if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
+                if config_value.startswith("\"") and config_value.endsswith("\""):
+                    config_value = config_value.replace("\"", "")
                 
                 # conditionals
-                if config_value in { "true", "false" }: config_value = True if config_value == "true" else False
+                if config_value in { "true", "false" }:
+                    config_value = True if config_value == "true" else False
                 
                 # digits
-                if config_value.isdigit(): config_value = int(config_value)
+                if config_value.isdigit():
+                    config_value = int(config_value)
 
                 # sanity check
-                if config_key != None and config_value != None: config[header][str(config_key)] = config_value
+                if config_key != None and config_value != None:
+                    config[header][str(config_key)] = config_value
 
     return config
