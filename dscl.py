@@ -59,16 +59,21 @@ def parse(path) -> dict:
             
             values = line.split(" ", 1)
 
+            # only headers are length 1
             if len(values) == 1 or (len(values) == 2 and values[1].startswith("--")):
-                # only headers are length 1
                 if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
                     header = values[0].strip().replace("[", "").replace("]", "")
                     config[str(header)] = {}
+            
+            # all other valid rows are length 2
             elif len(values) == 2:
                 config_key = values[0]
                 config_value = values[1].strip()
                 # strip comments
                 if "--" in config_value and not config_value.startswith("--"): config_value = config_value.split("--", 1)[0].strip()
+
+                # tuple
+                if config_value.isdigit(): config_value = int(config_value)
 
                 # strings
                 if config_value[0] == "\"" and config_value[-1] == "\"": config_value = config_value.replace("\"", "")
