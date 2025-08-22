@@ -14,12 +14,12 @@
 	              Dead Simple Config Lang
 
 
-## Example usage:
+## Example usage
 
 	from dscl import dscl
 	config = dscl.parse(path_to_config_file)
 
-## Example config-file syntax:
+## Example config-file syntax
 
 	[plugins]
 
