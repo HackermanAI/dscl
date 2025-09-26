@@ -24,11 +24,11 @@
 #   syntax_highlighter      true                  -- enable or disable syntax highlighting plugin
 #   git_integration         true                  -- enable or disable git integration
 #   auto_complete           true                  -- enable or disable auto completion
-# 
+#
 #   [themes]
 # 
-#   current_theme           "monokai"             -- set the active theme
-#   theme_path              "~/.config/themes"    -- path where custom themes are stored
+#   current_theme           "monokai"
+#   theme_path              "~/.config/themes"
 # 
 #   [logs]
 # 
@@ -63,7 +63,7 @@
 import os
 
 
-def merge_imports(path) -> list:
+def merge_imports(path, suffix) -> list:
     with open(path, "r", encoding="utf-8") as file:
         lines = file.readlines()
 
@@ -73,7 +73,7 @@ def merge_imports(path) -> list:
     for line in lines:
         if line.startswith("@"):
             module_name = line[1:].strip() # skip @
-            import_path = os.path.join(dir_path, f"{ module_name }.hackerman")            
+            import_path = os.path.join(dir_path, f"{ module_name }.{ suffix }")            
             try:
                 with open(import_path, "r", encoding="utf-8") as import_file:
                     merged_lines.extend(import_file.readlines())
@@ -85,8 +85,10 @@ def merge_imports(path) -> list:
     return merged_lines
 
 
-def parse(path) -> dict:
-    content = merge_imports(path)
+def parse(path, suffix) -> dict:
+    suffix = suffix.lstrip(".")
+    content = merge_imports(path, suffix)
+    
     config = {}
     header = None
     config_key = None
@@ -119,30 +121,39 @@ def parse(path) -> dict:
             if "--" in config_value and not config_value.startswith("--"):
                 config_value = config_value.split("--", 1)[0].strip()
 
-            # tuple
-            if config_value.startswith("(") and config_value.endswith(")"):
-                nested_values = config_value.replace("(", "").replace(")", "")
-                nested_values = nested_values.split(",", 1)
+            # tuple: ("a", "b") or ("a",)
+            elif config_value.startswith("(") and config_value.endswith(")"):
+                nested_values = config_value[1:-1].split(",", 1)
+                nested_values = [v.strip().replace("\"", "") for v in nested_values]
 
                 if len(nested_values) == 2:
-                    config_value = (nested_values[0].replace("\"", ""), nested_values[1].replace("\"", ""))
+                    config_value = (nested_values[0], nested_values[1])
                 else:
-                    config_value = (nested_values[0].replace("\"", ""), None)
+                    config_value = (nested_values[0], None)
 
-            # strings
+            # comma-separated list
+            elif "," in config_value:
+                parts = [v.strip() for v in config_value.split(",")]
+                config_value = [v.replace("\"", "") for v in parts if v]
+
+            # quoted string: "hello world"
             elif config_value.startswith("\"") and config_value.endswith("\""):
-                config_value = config_value.replace("\"", "")
-            
-            # conditionals
-            elif config_value in { "true", "false" }:
-                config_value = True if config_value == "true" else False
-            
-            # digits
+                config_value = config_value[1:-1]
+
+            # booleans
+            elif config_value in ("true", "false"):
+                config_value = config_value == "true"
+
+            # int
             elif config_value.isdigit():
                 config_value = int(config_value)
 
+            # fallback
+            else:
+                config_value = config_value.strip()
+
             # sanity check
-            if config_key != None and config_value != None:
+            if config_key is not None and config_value is not None:
                 config[header][str(config_key)] = config_value
 
     return config
