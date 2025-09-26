@@ -116,13 +116,15 @@ def parse(path, suffix) -> dict:
         elif len(values) == 2:
             config_key = values[0]
             config_value = values[1].strip()
+
             
             # strip comments
             if "--" in config_value and not config_value.startswith("--"):
                 config_value = config_value.split("--", 1)[0].strip()
 
+
             # tuple: ("a", "b") or ("a",)
-            elif config_value.startswith("(") and config_value.endswith(")"):
+            if config_value.startswith("(") and config_value.endswith(")"):
                 nested_values = config_value[1:-1].split(",", 1)
                 nested_values = [v.strip().replace("\"", "") for v in nested_values]
 
