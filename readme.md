@@ -1,4 +1,5 @@
 
+
          █████                  ████ 
         ░░███                  ░░███ 
       ███████   █████   ██████  ░███ 
@@ -14,7 +15,8 @@
 ## Example usage
 
     from dscl import dscl
-    config = dscl.parse(path_to_config_file)
+    config = dscl.parse(path_to_config_file, ".hackerman")
+
 
 ## Example config-file syntax
 
@@ -34,4 +36,5 @@
     log_level               "info"                -- set the log level (debug, info, warn, error)
     log_file                "/var/log/editor.log" -- location to store logs
 
-    @module                                       -- import module
+    @module                                       -- import module.hackerman (suffix set in dscl.parse)
+
