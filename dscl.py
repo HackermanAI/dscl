@@ -119,8 +119,12 @@ def parse(path, suffix) -> dict:
 
             
             # strip comments
-            if "--" in config_value and not config_value.startswith("--"):
-                config_value = config_value.split("--", 1)[0].strip()
+            # if "--" in config_value and not config_value.startswith("--"):
+            if "--" in config_value:
+                if config_value.startswith("--"):
+                    config_value = ""
+                else:
+                    config_value = config_value.split("--", 1)[0].strip()
 
 
             # tuple: ("a", "b") or ("a",)
