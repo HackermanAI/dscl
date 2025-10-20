@@ -130,7 +130,6 @@ def parse(path, suffix) -> dict:
                 else:
                     config_value = config_value.split("--", 1)[0].strip()
 
-
             # tuple: ("a", "b") or ("a",)
             if config_value.startswith("(") and config_value.endswith(")"):
                 nested_values = config_value[1:-1].split(",", 1)
