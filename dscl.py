@@ -107,16 +107,20 @@ def parse(path, suffix) -> dict:
         values = line.split(" ", 1)
 
         # only headers are length 1
-        if len(values) == 1 or (len(values) == 2 and values[1].startswith("--")):
-            if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
-                header = values[0].strip().replace("[", "").replace("]", "")
-                config[str(header)] = {}
-        
-        # all other valid rows are length 2
-        elif len(values) == 2:
-            config_key = values[0]
-            config_value = values[1].strip()
+        # if len(values) == 1 or (len(values) == 2 and values[1].startswith("--")):
+        #     if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
+        #         header = values[0].strip().replace("[", "").replace("]", "")
+        #         config[str(header)] = {}
 
+        # header
+        if values[0].strip().startswith("[") and values[0].strip().endswith("]"):
+            header = values[0].strip().replace("[", "").replace("]", "")
+            config[str(header)] = {}
+        
+        # key, value row
+        else:
+            config_key = values[0].strip()
+            config_value = values[1].strip() if len(values) > 1 else ""
             
             # strip comments
             # if "--" in config_value and not config_value.startswith("--"):
@@ -158,8 +162,8 @@ def parse(path, suffix) -> dict:
             else:
                 config_value = config_value.strip()
 
-            # sanity check
-            if config_key is not None and config_value is not None:
+            # final sanity check
+            if config_key is not None:
                 config[header][str(config_key)] = config_value
 
     return config
