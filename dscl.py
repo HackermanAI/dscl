@@ -151,7 +151,7 @@ def parse(path, suffix) -> dict:
 
             # booleans
             elif config_value in ("true", "false", "True", "False"):
-                config_value = config_value == "true"
+                config_value = config_value == "true" or config_value == "True"
 
             # int
             elif config_value.isdigit():
